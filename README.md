@@ -1,27 +1,35 @@
 # ✈ Wandr — AI Trip Planner
 
-A professional, luxury-themed AI-powered trip planning web app built with **React + Vite**, powered by **Google Gemini AI**.
+A professional, luxury-themed AI-powered trip planning web app built with **React + Vite**, powered by **OpenRouter AI**.
+
+---
+
+## 🚀 Live Demo
+
+🔗 https://ai-trip-planner-henna-five.vercel.app
 
 ---
 
 ## 🚀 Quick Start
 
 ### 1. Install dependencies
+
 ```bash
 npm install
 ```
 
-### 2. Add your Gemini API Key
+### 2. Add your OpenRouter API Key
 
-Open `src/gemini.js` and replace the placeholder with your actual key:
+Create a `.env` file in the root folder and add:
 
-```js
-const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE"; // 🔑 Replace this
+```env
+VITE_OPENROUTER_API_KEY=YOUR_OPENROUTER_API_KEY
 ```
 
-> 🔒 The API key only lives in the source code — it is **never** displayed on the website.
+> 🔒 The API key is stored securely using environment variables and is never displayed on the website.
 
 ### 3. Run the app
+
 ```bash
 npm run dev
 ```
@@ -32,19 +40,18 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ## 📁 Project Structure
 
-```
+```bash
 src/
-├── gemini.js              ← Gemini API key & prompt logic
-├── main.jsx               ← React entry point
-├── App.jsx                ← Main app state machine
+├── main.jsx
+├── App.jsx
 ├── App.css
-├── index.css              ← Global styles & CSS variables
+├── index.css
 └── components/
-    ├── Header.jsx / .css  ← Hero header
-    ├── TripForm.jsx / .css ← Planning form
-    ├── Loading.jsx / .css ← Loading screen
-    ├── ItineraryResult.jsx / .css ← Generated itinerary
-    └── Footer.jsx / .css  ← Footer
+    ├── Header.jsx
+    ├── TripForm.jsx
+    ├── Loading.jsx
+    ├── ItineraryResult.jsx
+    └── Footer.jsx
 ```
 
 ---
@@ -55,21 +62,48 @@ src/
 npm run build
 ```
 
-The output will be in the `dist/` folder.
+The production-ready files will be generated inside the `dist/` folder.
 
 ---
 
-## 🔑 Getting a Gemini API Key
+## 🌐 Deployment
 
-1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey)
-2. Create a new API key
-3. Paste it into `src/gemini.js`
+Deployed on Vercel
+
+Production URL:
+https://ai-trip-planner-henna-five.vercel.app
+
+---
+
+## 🔑 Getting an OpenRouter API Key
+
+1. Go to https://openrouter.ai
+2. Create/Login to your account
+3. Generate an API key
+4. Add it inside your `.env` file
 
 ---
 
 ## 🎨 Tech Stack
 
-- **React 18** + **Vite 5**
-- **Google Gemini 2.0 Flash** API
-- **Cormorant Garamond** + **DM Sans** fonts
-- Pure CSS animations (no animation library required)
+- **React 18**
+- **Vite**
+- **OpenRouter AI API**
+- **JavaScript**
+- **CSS3**
+- **Responsive Design**
+
+---
+
+## 📦 GitHub Repository
+
+https://github.com/AVNEESH707/ai-trip-planner
+
+---
+
+## 👨‍💻 Author
+
+Avneesh Kumar
+
+- GitHub: https://github.com/AVNEESH707
+- LinkedIn: https://linkedin.com/in/avneesh-kumar-3a50b325b
