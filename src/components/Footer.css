@@ -1,0 +1,38 @@
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 24px;
+  text-align: center;
+  background: var(--ink);
+}
+
+.footer-inner { max-width: 720px; margin: 0 auto; }
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.footer-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  color: var(--gold-light);
+  letter-spacing: 0.1em;
+}
+
+.footer-sep { color: var(--gold); opacity: 0.4; }
+
+.footer-tagline {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+
+.footer-note {
+  font-size: 0.72rem;
+  color: rgba(143,163,168,0.6);
+  line-height: 1.6;
+}
