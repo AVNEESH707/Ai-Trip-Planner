@@ -63,7 +63,7 @@ export default function App() {
     }
     setSaveStatus("saving");
     try {
-      const res = await fetch("http://localhost:5000/api/trips/save", {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trips/save`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

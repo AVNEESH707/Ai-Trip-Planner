@@ -10,7 +10,7 @@ export default function MyTrips({ onClose, onViewTrip }) {
   const [deleting, setDeleting] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/trips/my-trips", {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trips/my-trips`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -27,7 +27,7 @@ export default function MyTrips({ onClose, onViewTrip }) {
   const handleDelete = async (id) => {
     setDeleting(id);
     try {
-      await fetch(`http://localhost:5000/api/trips/${id}`, {
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trips/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
