@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./ItineraryResult.css";
 import TripMap from "./TripMap";
+import WeatherWidget from "./WeatherWidget";
 
 const TIME_ICONS = {
   morning: "☀",
@@ -14,18 +15,37 @@ const TIME_LABELS = {
   evening: "Evening",
 };
 
-const PIXABAY_KEY = import.meta.env.VITE_PIXABAY_KEY;
+const UNSPLASH_KEY = import.meta.env.VITE_UNSPLASH_KEY;
 
-// Fetch a photo URL from Pixabay for a given query
-async function fetchPixabayPhoto(query, orientation = "horizontal") {
+// In-memory cache to avoid duplicate API calls for same query
+const photoCache = new Map();
+
+// Fetch photos from Unsplash
+async function fetchUnsplashPhotos(query, count = 10) {
+  const cacheKey = `${query}_${count}`;
+  if (photoCache.has(cacheKey)) {
+    return photoCache.get(cacheKey);
+  }
+
   const encoded = encodeURIComponent(query);
-  const url = `https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${encoded}&image_type=photo&orientation=${orientation}&safesearch=true&per_page=5&category=travel`;
+  const url = `https://api.unsplash.com/search/photos?query=${encoded}&per_page=${count}&orientation=landscape&client_id=${UNSPLASH_KEY}`;
   const res = await fetch(url);
   const data = await res.json();
-  if (data.hits && data.hits.length > 0) {
-    return data.hits[0].largeImageURL;
+
+  if (data.results && data.results.length > 0) {
+    const urls = data.results.map((p) => p.urls.regular);
+    photoCache.set(cacheKey, urls);
+    return urls;
   }
-  return null;
+  return [];
+}
+
+// Pick first URL from results that hasn't been used yet
+function pickUnusedUrl(urls, usedSet) {
+  for (const url of urls) {
+    if (!usedSet.has(url)) return url;
+  }
+  return urls[0] || null;
 }
 
 // ── Destination Hero Image ───────────────────────────────────
@@ -37,23 +57,24 @@ function DestinationHero({ destination }) {
     setStatus("loading");
     setPhotoUrl(null);
 
-    fetchPixabayPhoto(`${destination} city landmark travel`)
-      .then((url) => {
-        if (url) {
-          setPhotoUrl(url);
+    async function load() {
+      try {
+        let urls = await fetchUnsplashPhotos(`${destination} city landmark travel`);
+        if (!urls.length) {
+          urls = await fetchUnsplashPhotos(destination);
+        }
+        if (urls.length) {
+          setPhotoUrl(urls[0]);
           setStatus("ready");
         } else {
-          // Try broader query
-          return fetchPixabayPhoto(destination);
+          setStatus("error");
         }
-      })
-      .then((url) => {
-        if (url && !photoUrl) {
-          setPhotoUrl(url);
-          setStatus("ready");
-        }
-      })
-      .catch(() => setStatus("error"));
+      } catch {
+        setStatus("error");
+      }
+    }
+
+    load();
   }, [destination]);
 
   return (
@@ -64,7 +85,6 @@ function DestinationHero({ destination }) {
           <span className="photo-loading-text">Finding the perfect photo…</span>
         </div>
       )}
-
       {status === "ready" && photoUrl && (
         <img
           src={photoUrl}
@@ -72,7 +92,6 @@ function DestinationHero({ destination }) {
           className="dest-hero-img loaded"
         />
       )}
-
       {status === "error" && (
         <div className="photo-fallback">
           <div className="photo-fallback-bg" />
@@ -81,14 +100,13 @@ function DestinationHero({ destination }) {
           </div>
         </div>
       )}
-
       <div className="dest-hero-overlay" />
     </div>
   );
 }
 
 // ── Activity Photo ───────────────────────────────────────────
-function ActivityPhoto({ destination, activity, time }) {
+function ActivityPhoto({ destination, activity, time, usedUrls }) {
   const [photoUrl, setPhotoUrl] = useState(null);
   const [status, setStatus] = useState("loading");
 
@@ -97,22 +115,37 @@ function ActivityPhoto({ destination, activity, time }) {
     setStatus("loading");
     setPhotoUrl(null);
 
-    fetchPixabayPhoto(`${destination} ${activity}`)
-      .then((url) => {
-        if (url) {
-          setPhotoUrl(url);
+    async function load() {
+      try {
+        // Try specific activity + destination first
+        let urls = await fetchUnsplashPhotos(`${destination} ${activity}`, 10);
+        let chosen = pickUnusedUrl(urls, usedUrls);
+
+        // Try just activity name
+        if (!chosen) {
+          urls = await fetchUnsplashPhotos(activity, 10);
+          chosen = pickUnusedUrl(urls, usedUrls);
+        }
+
+        // Last resort: just destination
+        if (!chosen) {
+          urls = await fetchUnsplashPhotos(destination, 10);
+          chosen = pickUnusedUrl(urls, usedUrls);
+        }
+
+        if (chosen) {
+          usedUrls.add(chosen);
+          setPhotoUrl(chosen);
           setStatus("ready");
         } else {
-          return fetchPixabayPhoto(destination);
+          setStatus("error");
         }
-      })
-      .then((url) => {
-        if (url && !photoUrl) {
-          setPhotoUrl(url);
-          setStatus("ready");
-        }
-      })
-      .catch(() => setStatus("error"));
+      } catch {
+        setStatus("error");
+      }
+    }
+
+    load();
   }, [destination, activity]);
 
   if (status === "error") return null;
@@ -134,6 +167,7 @@ function ActivityPhoto({ destination, activity, time }) {
 // ── Day Card ─────────────────────────────────────────────────
 function DayCard({ day, index, destination }) {
   const [open, setOpen] = useState(index === 0);
+  const usedUrls = useRef(new Set()).current;
 
   return (
     <div
@@ -164,6 +198,7 @@ function DayCard({ day, index, destination }) {
                   destination={destination}
                   activity={day[time]?.activity || ""}
                   time={time}
+                  usedUrls={usedUrls}
                 />
                 <h4 className="activity-title">{day[time]?.activity}</h4>
                 <p className="activity-desc">{day[time]?.description}</p>
@@ -191,7 +226,6 @@ function DayCard({ day, index, destination }) {
 export default function ItineraryResult({ data, onReset }) {
   return (
     <section className="result-section">
-
       <div className="result-hero animate-fade-up">
         <div className="result-eyebrow">Your Curated Itinerary</div>
         <h2 className="result-title">{data.tripTitle}</h2>
@@ -203,6 +237,8 @@ export default function ItineraryResult({ data, onReset }) {
       </div>
 
       <DestinationHero destination={data.destination} />
+
+      <WeatherWidget destination={data.destination} />
 
       <div className="map-wrapper">
         <TripMap destination={data.destination} />

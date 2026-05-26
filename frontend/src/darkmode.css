@@ -1,0 +1,45 @@
+/* ── Dark Mode Variables ──────────────────────────────────── */
+[data-theme="dark"] {
+  --cream: #1a1612;
+  --parchment: #242018;
+  --ink: #ede7dc;
+  --ink-light: #c9b99a;
+  --gold: #b8965a;
+  --gold-light: #d4aa73;
+  --terracotta: #c4623a;
+  --sage: #6b7c5e;
+  --mist: #6b7060;
+  --border: rgba(237, 231, 220, 0.1);
+  --shadow: 0 4px 40px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 12px 60px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] body {
+  background: #1a1612;
+  color: #ede7dc;
+}
+
+[data-theme="dark"] .day-card,
+[data-theme="dark"] .info-card,
+[data-theme="dark"] .highlight-item {
+  background: #242018;
+}
+
+[data-theme="dark"] .auth-card,
+[data-theme="dark"] .auth-input {
+  background: #242018;
+  color: #ede7dc;
+}
+
+[data-theme="dark"] .save-bar {
+  background: #1a1612;
+}
+
+[data-theme="dark"] .best-time {
+  background: #242018;
+  border: 1px solid rgba(184,150,90,0.2);
+}
+
+[data-theme="dark"] .world-svg {
+  background: #242018;
+}
