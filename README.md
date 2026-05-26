@@ -2,7 +2,7 @@
 
 A full-stack, luxury-themed AI-powered trip planning web app. Plan beautiful day-by-day travel itineraries, save your trips, and explore destinations — all in one elegant interface.
 
-**Live Demo:** https://ai-trip-planner-henna-five.vercel.app
+**Live Demo:** https://ai-trip-planner-drab-alpha.vercel.app
 
 ---
 
@@ -91,7 +91,7 @@ ai-trip-planner/
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/AVNEESH707/ai-trip-planner.git
+git clone https://github.com/AVNEESH707/Ai-Trip-Planner.git
 cd ai-trip-planner
 ```
 
@@ -132,6 +132,7 @@ npm install
 Create `frontend/.env`:
 
 ```env
+VITE_BACKEND_URL=http://localhost:5000
 VITE_OPENROUTER_API_KEY=your_openrouter_key
 VITE_UNSPLASH_KEY=your_unsplash_access_key
 VITE_WEATHER_KEY=your_openweathermap_key
@@ -159,10 +160,14 @@ npm run dev
 
 ## 🌐 Deployment
 
-- **Frontend** → Vercel
-- **Backend** → Render (or Railway)
+| | Platform | URL |
+|---|---|---|
+| **Frontend** | Vercel | https://ai-trip-planner-drab-alpha.vercel.app |
+| **Backend** | Render | https://ai-trip-planner-4er2.onrender.com |
 
-Add all `.env` variables to your deployment platform's environment settings.
+> ⚠️ Add all `.env` variables to your deployment platform's environment settings.
+
+> ⚠️ On Render free tier, the backend may take **50+ seconds** to wake up after inactivity.
 
 ---
 
