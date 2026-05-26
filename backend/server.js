@@ -9,7 +9,10 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ["http://localhost:5173", "https://ai-trip-planner-henna-five.vercel.app"],
+  origin: [
+    "http://localhost:5173",
+    "https://ai-trip-planner-drab-alpha.vercel.app"
+  ],
   credentials: true,
 }));
 app.use(express.json());
